@@ -74,7 +74,7 @@ const TodoList = () => {
         onChange={(e) => setInput(e.target.value)}
       />
       {/* 할 일을 추가하는 버튼입니다. */}
-      <div class="grid">
+      <div>
         <button
           // className={styles.addButton}
           // -- addButton CSS code --
