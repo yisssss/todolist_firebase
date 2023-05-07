@@ -133,6 +133,7 @@ const TodoList = () => {
           <TodoItem
             key={todo.id}
             todo={todo}
+            deadline={todo.deadline}
             onToggle={() => toggleTodo(todo.id)}
             onDelete={() => deleteTodo(todo.id)}
           />
