@@ -37,3 +37,9 @@ button.addButton:hover {
   margin-left: 10px;
   flex-grow: 1;
 }
+
+.todoDatetime {
+  font-size: 12px;
+  color: #666;
+  margin-right: 10px;
+}
