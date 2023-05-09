@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import TodoItem from "@/components/TodoItem";
 import styles from "@/styles/TodoList.module.css";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 
 import { db } from "@/firebase";
 import {
@@ -22,20 +21,16 @@ const todoCollection = collection(db, "todos");
 const TodoList = () => {
   const [todos, setTodos] = useState([]);
   const [input, setInput] = useState("");
-  const [deadline, setDeadline] = useState(new Date());
+  const { data } = useSession();
 
   const getTodos = async () => {
-    let q;
+    if (!data?.user?.name) return;
 
-    if (deadline !== "") {
-      q = query(
-        todoCollection,
-        orderBy("deadline"),
-        where("deadline", ">", new Date())
-      );
-    } else {
-      q = query(todoCollection, orderBy("__name__"));
-    }
+    const q = query(
+      todoCollection,
+      where("userId", "==", data?.user?.id),
+      orderBy("datetime", "asc")
+    );
 
     const results = await getDocs(q);
     const newTodos = [];
@@ -49,23 +44,24 @@ const TodoList = () => {
 
   useEffect(() => {
     getTodos();
-  }, []);
+  }, [data]);
 
   const addTodo = async () => {
     if (input.trim() === "") return;
+    const datetime = new Date().toISOString();
 
     const docRef = await addDoc(todoCollection, {
+      userId: data?.user?.id,
       text: input,
       completed: false,
-      deadline: deadline,
+      datetime: datetime,
     });
 
     setTodos([
       ...todos,
-      { id: docRef.id, text: input, completed: false, deadline: deadline },
+      { id: docRef.id, text: input, datetime: datetime, completed: false },
     ]);
     setInput("");
-    setDeadline(new Date());
   };
 
   const toggleTodo = (id) => {
@@ -97,7 +93,7 @@ const TodoList = () => {
   return (
     <div className={styles.container}>
       <h1 className="text-xl mb-4 font-bold underline underline-offset-4 decoration-wavy">
-        Todo List
+        {data?.user?.name}'s Todo List
       </h1>
       {/* 할 일을 입력받는 텍스트 필드입니다. */}
       <input
@@ -106,13 +102,7 @@ const TodoList = () => {
         value={input}
         onChange={(e) => setInput(e.target.value)}
       />
-      {/* deadline date를 선택하는 DatePicker */}
-      <DatePicker
-        className="mb-4 border border-gray-300 rounded p-1"
-        selected={deadline}
-        onChange={(date) => setDeadline(date)}
-        placeholderText="Deadline Date"
-      />
+
       {/* 할 일을 추가하는 버튼입니다. */}
       <div className="grid">
         <button
