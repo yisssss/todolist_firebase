@@ -5,6 +5,15 @@ export default function Signin() {
   const router = useRouter();
   const { data: session } = useSession();
 
+  const handleAdminButtonClick = () => {
+    const password = prompt("Enter admin password:");
+    if (password === "admin") {
+      router.push("/auth/admin");
+    } else {
+      alert("Invalid password.");
+    }
+  };
+
   return (
     <div className="flex justify-center h-screen">
       {session ? (
@@ -23,14 +32,14 @@ export default function Signin() {
           </button>
           <button
             className={`w-40
-             justify-self-center
-             p-1 mb-4
-           text-blue-500
-             border border-blue-500 rounded
-           hover:bg-white hover:text-blue-500`}
+                      justify-self-center
+                      p-1 mb-4
+                    text-blue-500
+                      border border-blue-500 rounded
+                    hover:bg-white hover:text-blue-500`}
             onClick={() => signOut()}
           >
-            Sign signOut
+            Sign out
           </button>
         </div>
       ) : (
@@ -38,14 +47,25 @@ export default function Signin() {
           <div className="m-4">Not signed in</div>
           <button
             className={`w-40
-                    justify-self-center
-                    p-1 mb-4
-                  bg-blue-500 text-white
-                    border border-blue-500 rounded
-                  hover:bg-white hover:text-blue-500`}
+                      justify-self-center
+                      p-1 mb-4
+                    bg-blue-500 text-white
+                      border border-blue-500 rounded
+                    hover:bg-white hover:text-blue-500`}
             onClick={() => signIn()}
           >
             Sign in
+          </button>
+          <button
+            className={`w-40
+                          justify-self-center
+                          p-1 mb-4
+                        bg-blue-500 text-white
+                          border border-blue-500 rounded
+                        hover:bg-white hover:text-blue-500`}
+            onClick={handleAdminButtonClick}
+          >
+            Admin
           </button>
         </div>
       )}
