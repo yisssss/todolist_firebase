@@ -3,16 +3,20 @@ import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function Signin() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const handleAdminButtonClick = () => {
     const password = prompt("Enter admin password:");
     if (password === "admin") {
-      router.push("/auth/admin");
+      signIn("credentials", { password, isAdmin: true }); // 관리자로 로그인하는 경우 isAdmin 값을 추가하여 세션 정보를 업데이트합니다.
     } else {
       alert("Invalid password.");
     }
   };
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex justify-center h-screen">
