@@ -41,12 +41,14 @@ button.addButton:hover {
 .todoDatetime {
   font-size: 12px;
   color: #666;
-
-  margin-left: 10px;
   margin-right: 10px;
+  margin-left: 10px;
 }
 
 .todoUserdId {
+  font-size: 12px;
+  color: #666;
   margin-left: 10px;
-  flex-grow: 1;
+  margin-right: 10px;
+  justify-content: right;
 }
